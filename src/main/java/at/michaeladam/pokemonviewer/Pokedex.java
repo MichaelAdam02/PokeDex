@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package at.michaeladam.pokemonviewer;
 
 import at.michaeladam.pokemonviewer.Businesslogic.API_Reader;
@@ -14,16 +9,19 @@ import javax.swing.event.ChangeEvent;
 /**
  *
  * @author Michael ADAM
+ * Normal Frame to display the Pokedex"
  */
-public class Pokedex extends javax.swing.JFrame implements Runnable {
+public class Pokedex extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Pokedex
-     */
-    int id = 1;
+    
+    
+    private int id = 1;
     private final API_Reader apr = new API_Reader();
     private Pokemon current;
-
+    
+    /**
+     * Creates the Pokedex-frame
+     */ 
     public Pokedex() {
         initComponents();
 
@@ -104,14 +102,23 @@ public class Pokedex extends javax.swing.JFrame implements Runnable {
 		
     }// </editor-fold>//GEN-END:initComponents
 
+    /*
+    *   TODO: Implement saving of the pokemonHolders
+    */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         PokemonHolder.getInstance().saveMap();
     }//GEN-LAST:event_formWindowClosing
 
+    /*
+    *When The Shiny State is applied it should refresh the pokemon to display the shiny version of it.
+    */
     private void tbShinyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbShinyActionPerformed
         refresh();
     }//GEN-LAST:event_tbShinyActionPerformed
 
+    /*
+        Refreshes the icons names and type text
+    */    
     private void refresh() {
         current = PokemonHolder.getInstance().getPokemon(id);
 
@@ -139,15 +146,5 @@ public class Pokedex extends javax.swing.JFrame implements Runnable {
     private javax.swing.JToggleButton tbShiny;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void run() {
-        while (this.isActive()) {
-            try {
-                sleep(200);
-
-            } catch (InterruptedException ex) {
-
-            }
-        }
-    }
+     
 }

@@ -26,7 +26,10 @@ public class API_Reader {
         client = ClientBuilder.newClient();
 
     }
-
+    /*
+    *   Param id ID of the pokemon wich will be looked up on the APIs
+    *   returns the pokemon of the ID wich will be extracted of the PKMN Url 
+    */
     public Pokemon getPokemon(int id) {
         if (id < 1 || id > PokeConfig.POKECOUNT) {
             return null;
@@ -49,6 +52,11 @@ public class API_Reader {
         return returnal;
     }
 
+    /*
+    *   Temporary Function which loads the JSON of the API and translates into a JSON Object
+    *   param uri Link to the api
+    *   returns JsonObject of the api
+    */
     private static JsonObject getJson(String uri) {
         WebTarget target = client.target(uri);
         Response result = target.request().accept(MediaType.APPLICATION_JSON).get();

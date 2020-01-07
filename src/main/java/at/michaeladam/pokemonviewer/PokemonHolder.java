@@ -1,29 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package at.michaeladam.pokemonviewer;
 
 import at.michaeladam.pokemonviewer.Businesslogic.API_Reader;
 import at.michaeladam.pokemonviewer.Businesslogic.PokeConfig;
 import at.michaeladam.pokemonviewer.DataLayer.Pokemon;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -53,6 +34,10 @@ public class PokemonHolder implements Runnable, Serializable {
        pokeMap = new HashMap<>();
     }
 
+    /*
+       Loads Pokemon from the api in the baground of the program
+    
+    */
     @Override
     public void run() {
 

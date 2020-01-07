@@ -1,14 +1,10 @@
 package at.michaeladam.pokemonviewer.DataLayer;
 
 import com.google.gson.JsonArray;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
@@ -22,6 +18,10 @@ public class Pokemon implements Serializable {
     public final String front_def, front_shy, back_def, back_shy;
     public transient BufferedImage front_default, front_shiny, back_default, back_shiny;
 
+    /*
+    * Generates a pokemon with the data of the API
+    *
+    */
     public Pokemon(int ID, String name, String front_def, String front_shy, String back_def, String back_shy) {
         this.ID = ID;
         this.name = name.substring(0, 1).toUpperCase() + name.substring(1);
