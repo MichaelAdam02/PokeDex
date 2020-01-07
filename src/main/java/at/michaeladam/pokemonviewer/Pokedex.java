@@ -2,7 +2,10 @@ package at.michaeladam.pokemonviewer;
 
 import at.michaeladam.pokemonviewer.Businesslogic.API_Reader;
 import at.michaeladam.pokemonviewer.DataLayer.Pokemon;
+import java.io.IOException;
 import static java.lang.Thread.sleep;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.event.ChangeEvent;
 
@@ -106,7 +109,11 @@ public class Pokedex extends javax.swing.JFrame {
     *   TODO: Implement saving of the pokemonHolders
     */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        PokemonHolder.getInstance().saveMap();
+        try {
+            PokemonHolder.getInstance().saveMap();
+        } catch (IOException ex) { 
+        }
+       
     }//GEN-LAST:event_formWindowClosing
 
     /*

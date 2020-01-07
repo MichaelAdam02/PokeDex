@@ -96,4 +96,22 @@ public class Pokemon implements Serializable {
        return typeString;
     }
 
+    public void setBack_default(BufferedImage back_default) {
+        this.back_default = back_default;
+    }
+
+    public void setBack_shiny(BufferedImage back_shiny) {
+        this.back_shiny = back_shiny;
+    }
+
+    public void setFront_shiny(BufferedImage front_shiny) {
+        this.front_shiny = front_shiny;
+    }
+
+    public void setFront_default(BufferedImage front_default) {
+        this.front_default = front_default;
+    }
+
+    
+    
 }
