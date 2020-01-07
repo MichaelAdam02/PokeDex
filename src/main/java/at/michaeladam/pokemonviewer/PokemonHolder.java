@@ -45,10 +45,11 @@ public class PokemonHolder implements Runnable, Serializable {
 
   
     public void saveMap() {
-       
+       //TODO
     }
 
     private void loadMap() { 
+       //TODO
        pokeMap = new HashMap<>();
     }
 

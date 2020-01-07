@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import java.io.IOException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -19,8 +18,8 @@ import javax.ws.rs.core.Response;
 public class API_Reader {
 
     private static Client client;
-    private static final GsonBuilder builder = new GsonBuilder();
-    private static final Gson gson = builder.create();
+    private static final GsonBuilder BUILDER = new GsonBuilder();
+    private static final Gson GSON = BUILDER.create();
 
     public API_Reader() {
 
