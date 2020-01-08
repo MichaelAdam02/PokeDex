@@ -1,33 +1,38 @@
 package at.michaeladam.pokemonviewer;
 
 import at.michaeladam.pokemonviewer.Businesslogic.API_Reader;
+import static at.michaeladam.pokemonviewer.Businesslogic.PokeConfig.POKECOUNT;
 import at.michaeladam.pokemonviewer.DataLayer.Pokemon;
+import java.awt.Image;
 import java.io.IOException;
 import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 
 /**
  *
- * @author Michael ADAM
- * Normal Frame to display the Pokedex"
+ * @author Michael ADAM Normal Frame to display the Pokedex"
  */
 public class Pokedex extends javax.swing.JFrame {
 
-    
-    
     private int id = 1;
     private final API_Reader apr = new API_Reader();
     private Pokemon current;
-    
+
     /**
      * Creates the Pokedex-frame
-     */ 
+     */
     public Pokedex() {
         initComponents();
-
+        refresh();
+        spOutput.setModel(new SpinnerNumberModel(1, 1, POKECOUNT, 1));
+        spOutput.addChangeListener((e) -> {
+            id = (int) spOutput.getValue();
+            refresh();
+        });
     }
 
 
@@ -47,6 +52,11 @@ public class Pokedex extends javax.swing.JFrame {
         setMinimumSize(new java.awt.Dimension(600, 400));
         setName("Pokedex"); // NOI18N
         setPreferredSize(new java.awt.Dimension(700, 400));
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                Resize(evt);
+            }
+        });
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -54,7 +64,7 @@ public class Pokedex extends javax.swing.JFrame {
         });
         getContentPane().setLayout(new java.awt.GridLayout(0, 1));
 
-        bilder.setLayout(new java.awt.GridLayout());
+        bilder.setLayout(new java.awt.GridLayout(1, 0));
 
         lbImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbImage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -66,7 +76,7 @@ public class Pokedex extends javax.swing.JFrame {
 
         getContentPane().add(bilder);
 
-        output.setLayout(new java.awt.GridLayout());
+        output.setLayout(new java.awt.GridLayout(1, 0));
 
         lbTypes.setFont(new java.awt.Font("Bahnschrift", 0, 24)); // NOI18N
         lbTypes.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -97,38 +107,44 @@ public class Pokedex extends javax.swing.JFrame {
         getContentPane().add(output);
 
         pack();
-		refresh();
-        spOutput.addChangeListener((ChangeEvent e) -> {
-            id = (int) spOutput.getValue();
-            refresh();
-        });
-		
     }// </editor-fold>//GEN-END:initComponents
 
-    /*
-    *   TODO: Implement saving of the pokemonHolders
-    */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         try {
             PokemonHolder.getInstance().saveMap();
-        } catch (IOException ex) { 
+        } catch (IOException ex) {
         }
-       
+
     }//GEN-LAST:event_formWindowClosing
 
     /*
-    *When The Shiny State is applied it should refresh the pokemon to display the shiny version of it.
-    */
+     *When The Shiny State is applied it should refresh the pokemon to display the shiny version of it.
+     */
     private void tbShinyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbShinyActionPerformed
         refresh();
     }//GEN-LAST:event_tbShinyActionPerformed
+    /*
+    * Everytime the window is resized the sprites need to change size, if the
+    * size is too small it wont change the size
+    *
+    */
+    private void Resize(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_Resize
+
+        int maxSize = Math.min(lbImage.getWidth(), lbImage.getHeight());
+        int sizeDif = Math.abs(Pokemon.getPokesize() - maxSize);
+         
+        if (sizeDif > 10) {
+            Pokemon.setPokesize(maxSize);
+        }
+        refresh();
+    }//GEN-LAST:event_Resize
 
     /*
         Refreshes the icons names and type text
-    */    
+     */
     private void refresh() {
-        current = PokemonHolder.getInstance().getPokemon(id);
 
+        current = PokemonHolder.getInstance().getPokemon(id);
         if (tbShiny.isSelected()) {
             lbImage.setIcon(new ImageIcon(current.getFront_shiny()));
             lbImageBack.setIcon(new ImageIcon(current.getBack_shiny()));
@@ -153,5 +169,4 @@ public class Pokedex extends javax.swing.JFrame {
     private javax.swing.JToggleButton tbShiny;
     // End of variables declaration//GEN-END:variables
 
-     
 }

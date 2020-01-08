@@ -1,6 +1,7 @@
 package at.michaeladam.pokemonviewer.Businesslogic;
 
 import at.michaeladam.pokemonviewer.DataLayer.Pokemon;
+import at.michaeladam.pokemonviewer.PokemonHolder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -33,15 +34,14 @@ public class API_Reader {
     public Pokemon getPokemon(int id) {
         if (id < 1 || id > PokeConfig.POKECOUNT) {
             return null;
-        }
-
+        }    
         JsonObject result = getJson(PokeConfig.PKMN_URL.replace("%id%", "" + id));
         JsonElement getTypes = result.get("types");
         JsonElement getForms = result.get("forms");
         String name = getForms.getAsJsonArray().get(0).getAsJsonObject().get("name").getAsString();
         String spriteApi = getForms.getAsJsonArray().get(0).getAsJsonObject().get("url").getAsString();
-
-        JsonObject spriteResult = getJson(spriteApi);
+        
+        JsonObject spriteResult = getJson(spriteApi);  
         String front_default = spriteResult.get("sprites").getAsJsonObject().get("front_default").getAsString();
         String front_shiny = spriteResult.get("sprites").getAsJsonObject().get("front_shiny").getAsString();
         String back_default = spriteResult.get("sprites").getAsJsonObject().get("back_default").getAsString();

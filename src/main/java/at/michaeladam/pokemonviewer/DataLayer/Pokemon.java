@@ -1,5 +1,7 @@
 package at.michaeladam.pokemonviewer.DataLayer;
 
+import at.michaeladam.pokemonviewer.Businesslogic.CodeInternet;
+import static at.michaeladam.pokemonviewer.Businesslogic.CodeInternet.resizeImage;
 import com.google.gson.JsonArray;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -13,6 +15,16 @@ import javax.imageio.ImageIO;
  */
 public class Pokemon implements Serializable {
 
+   public static int pokesize = 240;
+
+    public static int getPokesize() {
+        return pokesize;
+    }
+
+    public static void setPokesize(int pokesize) {
+        Pokemon.pokesize = pokesize;
+    }
+ 
     public final int ID;
     public final String name;
     public final String front_def, front_shy, back_def, back_shy;
@@ -21,7 +33,7 @@ public class Pokemon implements Serializable {
     /*
     * Generates a pokemon with the data of the API
     *
-    */
+     */
     public Pokemon(int ID, String name, String front_def, String front_shy, String back_def, String back_shy) {
         this.ID = ID;
         this.name = name.substring(0, 1).toUpperCase() + name.substring(1);
@@ -30,46 +42,49 @@ public class Pokemon implements Serializable {
         this.back_def = back_def;
         this.back_shy = back_shy;
     }
-
     public BufferedImage getBack_default() {
         if (back_default == null) {
             try {
-                this.back_default = ImageIO.read(new URL(back_def));
+                BufferedImage bf = ImageIO.read(new URL(back_def));
+                this.back_default = bf;
             } catch (IOException ex) {
             }
         }
-        return back_default;
+        return resizeImage(back_default, pokesize, pokesize);
     }
 
     public BufferedImage getBack_shiny() {
         if (back_shiny == null) {
-            try {
-                this.back_shiny = ImageIO.read(new URL(back_shy)); 
+            try { 
+                BufferedImage bf = ImageIO.read(new URL(back_shy)); 
+                this.back_shiny = bf; 
             } catch (IOException ex) {
             }
         }
-        return back_shiny;
+        return resizeImage(back_shiny, pokesize, pokesize);
     }
 
     public BufferedImage getFront_default() {
         if (front_default == null) {
             try {
-                this.front_default = ImageIO.read(new URL(front_def));
+                BufferedImage bf = ImageIO.read(new URL(front_def));
+                this.front_default =bf; 
             } catch (IOException ex) {
             }
         }
-        return front_default;
+        return  resizeImage(front_default, pokesize, pokesize);
     }
 
     public BufferedImage getFront_shiny() {
 
         if (front_shiny == null) {
             try {
-                this.front_shiny = ImageIO.read(new URL(front_shy));
+                BufferedImage bf = ImageIO.read(new URL(front_shy));
+                this.front_shiny = bf; 
             } catch (IOException ex) {
             }
         }
-        return front_shiny;
+        return resizeImage(front_shiny,pokesize,pokesize);
     }
 
     @Override
@@ -88,12 +103,12 @@ public class Pokemon implements Serializable {
 
     public void addTypes(JsonArray types) {
         for (int i = 0; i < types.size(); i++) {
-            typeString += types.get(i).getAsJsonObject().get("type").getAsJsonObject().get("name").getAsString() + " "; 
+            typeString += types.get(i).getAsJsonObject().get("type").getAsJsonObject().get("name").getAsString() + " ";
         }
     }
 
     public String getType() {
-       return typeString;
+        return typeString;
     }
 
     public void setBack_default(BufferedImage back_default) {
@@ -112,6 +127,4 @@ public class Pokemon implements Serializable {
         this.front_default = front_default;
     }
 
-    
-    
 }
