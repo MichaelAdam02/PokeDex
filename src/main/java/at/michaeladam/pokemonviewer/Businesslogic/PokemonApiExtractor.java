@@ -13,35 +13,42 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- *
+ * Singletonclass
  * @author Michael ADAM
  */
-public class API_Reader {
+public class PokemonApiExtractor {
 
     private static Client client;
-    private static final GsonBuilder BUILDER = new GsonBuilder();
-    private static final Gson GSON = BUILDER.create();
+    private static final GsonBuilder BUILDER = new GsonBuilder(); 
 
-    public API_Reader() {
-
-        client = ClientBuilder.newClient();
-
+    public static PokemonApiExtractor getInstance() {
+        return PokemonApiExtractorHolder.INSTANCE;
     }
-    /*
-    *   Param id ID of the pokemon wich will be looked up on the APIs
-    *   returns the pokemon of the ID wich will be extracted of the PKMN Url 
-    */
+
+    private static class PokemonApiExtractorHolder {
+
+        private static final PokemonApiExtractor INSTANCE = new PokemonApiExtractor();
+    }
+
+    private PokemonApiExtractor() {
+        client = ClientBuilder.newClient();
+    }
+
+    /**
+     * @param id ID of the pokemon wich will be looked up on the APIs
+     * @return the pokemon of the ID wich will be extracted of the PKMN Url
+     */
     public Pokemon getPokemon(int id) {
         if (id < 1 || id > PokeConfig.POKECOUNT) {
             return null;
-        }    
+        }
         JsonObject result = getJson(PokeConfig.PKMN_URL.replace("%id%", "" + id));
         JsonElement getTypes = result.get("types");
         JsonElement getForms = result.get("forms");
         String name = getForms.getAsJsonArray().get(0).getAsJsonObject().get("name").getAsString();
         String spriteApi = getForms.getAsJsonArray().get(0).getAsJsonObject().get("url").getAsString();
-        
-        JsonObject spriteResult = getJson(spriteApi);  
+
+        JsonObject spriteResult = getJson(spriteApi);
         String front_default = spriteResult.get("sprites").getAsJsonObject().get("front_default").getAsString();
         String front_shiny = spriteResult.get("sprites").getAsJsonObject().get("front_shiny").getAsString();
         String back_default = spriteResult.get("sprites").getAsJsonObject().get("back_default").getAsString();
@@ -52,11 +59,13 @@ public class API_Reader {
         return returnal;
     }
 
-    /*
-    *   Temporary Function which loads the JSON of the API and translates into a JSON Object
-    *   param uri Link to the api
-    *   returns JsonObject of the api
-    */
+    /**
+     * Temporary Function which loads the JSON of the API and translates into a
+     * JSON Object
+     *
+     * @param uri Link to the api
+     * @return JsonObject of the api
+     */
     private static JsonObject getJson(String uri) {
         WebTarget target = client.target(uri);
         Response result = target.request().accept(MediaType.APPLICATION_JSON).get();

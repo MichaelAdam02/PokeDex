@@ -1,16 +1,12 @@
 package at.michaeladam.pokemonviewer;
 
-import at.michaeladam.pokemonviewer.Businesslogic.API_Reader;
+import at.michaeladam.pokemonviewer.Businesslogic.PokemonApiExtractor;
+import at.michaeladam.pokemonviewer.Businesslogic.PokeConfig;
 import static at.michaeladam.pokemonviewer.Businesslogic.PokeConfig.POKECOUNT;
 import at.michaeladam.pokemonviewer.DataLayer.Pokemon;
-import java.awt.Image;
 import java.io.IOException;
-import static java.lang.Thread.sleep;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
 
 /**
  *
@@ -18,8 +14,7 @@ import javax.swing.event.ChangeEvent;
  */
 public class Pokedex extends javax.swing.JFrame {
 
-    private int id = 1;
-    private final API_Reader apr = new API_Reader();
+    private int id = 1; 
     private Pokemon current;
 
     /**
@@ -117,13 +112,13 @@ public class Pokedex extends javax.swing.JFrame {
 
     }//GEN-LAST:event_formWindowClosing
 
-    /*
-     *When The Shiny State is applied it should refresh the pokemon to display the shiny version of it.
-     */
+    /**
+     * After toggling the shiny button the image refreshes
+    */
     private void tbShinyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbShinyActionPerformed
         refresh();
     }//GEN-LAST:event_tbShinyActionPerformed
-    /*
+    /**
     * Everytime the window is resized the sprites need to change size, if the
     * size is too small it wont change the size
     *
@@ -131,20 +126,21 @@ public class Pokedex extends javax.swing.JFrame {
     private void Resize(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_Resize
 
         int maxSize = Math.min(lbImage.getWidth(), lbImage.getHeight());
-        int sizeDif = Math.abs(Pokemon.getPokesize() - maxSize);
+        int sizeDif = Math.abs(PokeConfig.getPokesize() - maxSize);
          
         if (sizeDif > 10) {
-            Pokemon.setPokesize(maxSize);
+            PokeConfig.setPokesize(maxSize);
         }
         refresh();
     }//GEN-LAST:event_Resize
 
-    /*
-        Refreshes the icons names and type text
-     */
+    /**
+     *   Refreshes the icons names and type text
+    */
     private void refresh() {
 
         current = PokemonHolder.getInstance().getPokemon(id);
+        //wenn der button gedrückt ist sind die pokemon shiny
         if (tbShiny.isSelected()) {
             lbImage.setIcon(new ImageIcon(current.getFront_shiny()));
             lbImageBack.setIcon(new ImageIcon(current.getBack_shiny()));

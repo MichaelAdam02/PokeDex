@@ -1,6 +1,6 @@
 package at.michaeladam.pokemonviewer;
 
-import at.michaeladam.pokemonviewer.Businesslogic.API_Reader;
+import at.michaeladam.pokemonviewer.Businesslogic.PokemonApiExtractor;
 import at.michaeladam.pokemonviewer.Businesslogic.PokeConfig;
 import static at.michaeladam.pokemonviewer.Businesslogic.PokeConfig.IMAGE_FILE_URL;
 import at.michaeladam.pokemonviewer.DataLayer.Pokemon;
@@ -20,35 +20,41 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
- *
+ * Singleton-class
  * @author Michael ADAM
  */
 public class PokemonHolder implements Runnable, Serializable {
 
-    private final API_Reader apr = new API_Reader();
+    private final PokemonApiExtractor apiAccess = PokemonApiExtractor.getInstance();
     private Map<Integer, Pokemon> pokeMap;
-    /*
-       Returns the pokemon with the specified id, if its not yet created download it(causes lags) TODO: Async 
-    */
+
+    /**
+     * @param id
+     * @return creates or gets the pokemon with the id TODO: Async
+     * @see Pokemon
+     */
     public Pokemon getPokemon(int id) {
         if (pokeMap.containsKey(id)) {
             return pokeMap.get(id);
         }
-        Pokemon pokemon = apr.getPokemon(id);
+        Pokemon pokemon = apiAccess.getPokemon(id);
         pokeMap.put(id, pokemon);
         return pokemon;
     }
-    /*
-        Saves all image files and pokeman data from the specified folder 
-    */
+
+    /**
+     * Saves all image files and pokeman data from the specified folder
+     *
+     * @throws java.io.IOException
+     */
     public void saveMap() throws IOException {
         RUNNING = false;
-        while (!done){ 
+        while (!done) {
             System.out.println("waiting for thread...");
             try {
                 sleep(500);
             } catch (InterruptedException ex) {
-             }
+            }
         }
         new File(IMAGE_FILE_URL).mkdir();
 
@@ -68,9 +74,10 @@ public class PokemonHolder implements Runnable, Serializable {
 
         }
     }
-    /*
-        Loads all image files and pokeman data from the specified folder 
-    */
+
+    /**
+     * Loads all image files and pokeman data from the specified folder
+     */
     private void loadMap() {
         pokeMap = Collections.synchronizedMap(new HashMap<>());
         File f = new File(IMAGE_FILE_URL);
@@ -87,7 +94,7 @@ public class PokemonHolder implements Runnable, Serializable {
                     pkm.setBack_shiny(ImageIO.read(new File(ordner + "\\bs.png")));
                     pkm.setFront_default(ImageIO.read(new File(ordner + "\\fd.png")));
                     pkm.setFront_shiny(ImageIO.read(new File(ordner + "\\fs.png")));
-                    pokeMap.put(Integer.parseInt(ordner.getName()),pkm);
+                    pokeMap.put(Integer.parseInt(ordner.getName()), pkm);
 
                 } catch (IOException ex) {
                     Logger.getLogger(PokemonHolder.class.getName()).log(Level.SEVERE, null, ex);
@@ -100,20 +107,20 @@ public class PokemonHolder implements Runnable, Serializable {
 
     }
 
-    /*
-       Loads Pokemon from the api in the background  
-     */
     boolean RUNNING = true;
     boolean done = false;
 
+    /**
+     * Loads Pokemon from the api in the background
+     */
     @Override
     public void run() {
- 
-        for (int i = 1; i < PokeConfig.POKECOUNT && RUNNING; i++) {
-            if (!pokeMap.containsKey(i)) { 
-                Pokemon pokemon = apr.getPokemon(i); 
-                pokeMap.put(i, pokemon);
-                pokemon.preLoad(); 
+
+        for (int pokemonID = 1; pokemonID < PokeConfig.POKECOUNT && RUNNING; pokemonID++) {
+            if (!pokeMap.containsKey(pokemonID)) {
+                Pokemon pokemon = apiAccess.getPokemon(pokemonID);
+                pokeMap.put(pokemonID, pokemon);
+                pokemon.preLoad();
             }
 
         }
